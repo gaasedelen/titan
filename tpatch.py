@@ -23,8 +23,8 @@ class TitanPatcher(object):
         self._ks = keystone.Ks(keystone.KS_ARCH_X86, keystone.KS_MODE_32)
         self._fd = None
 
-        assert 2 <= int(udma) <= 5, f"Invalid UDMA mode ({udma})"
-        self._udma = int(udma)
+        assert 2 <= udma <= 5, f"Invalid UDMA mode ({udma})"
+        self._udma = udma
 
         if filepath:
             self.patch_kernel(filepath)
@@ -263,7 +263,7 @@ def main(argc, argv):
     print(f"[*] Patching with Titan v{VERSION} -- by {AUTHOR}")
 
     # attempt to patch the given kernel image
-    patcher = TitanPatcher(udma=args.udma)
+    patcher = TitanPatcher(udma=int(args.udma))
     patcher.patch_kernel(kernel_filepath, args.force)
 
     print("[+] Patching successful!")
