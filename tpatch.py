@@ -22,12 +22,12 @@ class TitanPatcher(object):
         self.filepath = filepath
         self._ks = keystone.Ks(keystone.KS_ARCH_X86, keystone.KS_MODE_32)
         self._fd = None
+
+        assert udma.isnumeric(),  f"Invalid UDMA mode ({udma})"
         
         if udma.isnumeric():
             #set udma to int type
-            udma = int(udma)
-
-        assert udma.isnumeric(),  f"Invalid UDMA mode ({udma})"
+            udma = int(udma)        
 
         assert 2 <= udma <= 5, f"Invalid UDMA mode ({udma})"
         self._udma = udma
@@ -283,4 +283,3 @@ def main(argc, argv):
 if __name__ == '__main__':
     result = main(len(sys.argv), sys.argv)
     sys.exit(result)
-    
