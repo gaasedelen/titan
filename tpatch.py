@@ -23,8 +23,8 @@ class TitanPatcher(object):
         self._ks = keystone.Ks(keystone.KS_ARCH_X86, keystone.KS_MODE_32)
         self._fd = None
 
-        assert 2 <= udma <= 5, f"Invalid UDMA mode ({udma})"
-        self._udma = udma
+        assert 2 <= int(udma) <= 5, f"Invalid UDMA mode ({udma})"
+        self._udma = int(udma)
 
         if filepath:
             self.patch_kernel(filepath)
@@ -92,6 +92,7 @@ class TitanPatcher(object):
         #
 
         if self._udma > 2:
+            print(f"[*] - 0x800553FE: Patching UDMA to version {self._udma}")
             patch_address = 0x800553FE
             patch_bytes = self._assemble(f"push 0x{0x40+self._udma:02X}", patch_address)
             self._write_bytes(patch_bytes, patch_address)
@@ -259,7 +260,6 @@ def main(argc, argv):
             shutil.copy(kernel_filepath, kernel_filepath_bak)
     except:
         pass
-
     print(f"[*] Patching with Titan v{VERSION} -- by {AUTHOR}")
 
     # attempt to patch the given kernel image
@@ -276,3 +276,4 @@ def main(argc, argv):
 if __name__ == '__main__':
     result = main(len(sys.argv), sys.argv)
     sys.exit(result)
+    
