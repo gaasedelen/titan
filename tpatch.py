@@ -9,7 +9,7 @@ from titan.keystone import keystone
 from titan.patches.m8 import KERNEL_PATCHES
 from titan.patches.common import PatchType
 
-VERSION = '1.0'
+VERSION = '1.0.1'
 AUTHOR  = 'Markus Gaasedelen'
 
 #------------------------------------------------------------------------------
@@ -22,12 +22,6 @@ class TitanPatcher(object):
         self.filepath = filepath
         self._ks = keystone.Ks(keystone.KS_ARCH_X86, keystone.KS_MODE_32)
         self._fd = None
-
-        assert udma.isnumeric(), f"Invalid UDMA mode ({udma})"
-        
-        if udma.isnumeric():
-            #set udma to int type
-            udma = int(udma)        
 
         assert 2 <= udma <= 5, f"Invalid UDMA mode ({udma})"
         self._udma = udma
@@ -99,7 +93,7 @@ class TitanPatcher(object):
 
         if self._udma > 2:
             patch_address = 0x800553FE
-            print(f"[*] - 0x{patch_address:X}: Patching UDMA to version {self._udma}")
+            print(f"[*] - 0x{patch_address:08X}: Patching UDMA to version {self._udma}")
             patch_bytes = self._assemble(f"push 0x{0x40+self._udma:02X}", patch_address)
             self._write_bytes(patch_bytes, patch_address)
 
@@ -235,6 +229,7 @@ def main(argc, argv):
     parser.add_argument(
         '-u',
         '--udma',
+        type=int,
         help='specify a UDMA mode (2 through 5)',
         default=2 # UDMA MODE 2 (retail)
     )
@@ -266,7 +261,7 @@ def main(argc, argv):
             shutil.copy(kernel_filepath, kernel_filepath_bak)
     except:
         pass
-    
+
     print(f"[*] Patching with Titan v{VERSION} -- by {AUTHOR}")
 
     # attempt to patch the given kernel image
