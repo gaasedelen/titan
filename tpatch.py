@@ -266,6 +266,7 @@ def main(argc, argv):
             shutil.copy(kernel_filepath, kernel_filepath_bak)
     except:
         pass
+    
     print(f"[*] Patching with Titan v{VERSION} -- by {AUTHOR}")
 
     # attempt to patch the given kernel image
