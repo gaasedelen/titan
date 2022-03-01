@@ -59,7 +59,8 @@ class TitanPatcher(object):
         """
         Patch the M8 kernel with TITAN.
         """
-        self._prep_cave(0x8003026F, 0x800305C8) # s/o to LoveMhz for the tip
+        # Reuse memory space for preproduction(?) CPU microcode
+        self._prep_cave(0x80061E24, 0x80062624)
 
         for patch in KERNEL_PATCHES:
             patch_name = patch.__name__.split('Patch_')[1] + '(...)'

@@ -4,6 +4,14 @@ from .common import XboxPatch, PatchType
 # M8+ Patch Definitions
 #-----------------------------------------------------------------------------
 
+class Patch_MicrocodeLoader(XboxPatch):
+    TYPE = PatchType.INLINE
+    HOOK_ADDRESS = 0x80061DFD
+
+    EXPECTED_LENGTH = 14
+    ASSEMBLY = "\n" + \
+        ("NOP\n" * EXPECTED_LENGTH)
+
 class Patch_HddStartVerify(XboxPatch):
     TYPE = PatchType.INLINE
     HOOK_ADDRESS = 0x800243AA
@@ -433,6 +441,9 @@ class Patch_FatxAsyncIo(XboxPatch):
 
 KERNEL_PATCHES = \
 [
+    # Fix up the microcode loader to avoid using our carved out space
+    Patch_MicrocodeLoader,
+
     # TODO: these should probably patched for completeness but appear unused
     Patch_HddStartVerify,
     Patch_HddVerify,
