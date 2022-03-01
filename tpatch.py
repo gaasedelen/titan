@@ -23,7 +23,7 @@ class TitanPatcher(object):
         self._ks = keystone.Ks(keystone.KS_ARCH_X86, keystone.KS_MODE_32)
         self._fd = None
 
-        assert udma.isnumeric(),  f"Invalid UDMA mode ({udma})"
+        assert udma.isnumeric(), f"Invalid UDMA mode ({udma})"
         
         if udma.isnumeric():
             #set udma to int type
