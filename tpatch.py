@@ -9,7 +9,7 @@ from titan.keystone import keystone
 from titan.patches.m8 import KERNEL_PATCHES
 from titan.patches.common import PatchType
 
-VERSION = '1.0'
+VERSION = '1.0.1'
 AUTHOR  = 'Markus Gaasedelen'
 
 #------------------------------------------------------------------------------
@@ -93,6 +93,7 @@ class TitanPatcher(object):
 
         if self._udma > 2:
             patch_address = 0x800553FE
+            print(f"[*] - 0x{patch_address:08X}: Patching UDMA to version {self._udma}")
             patch_bytes = self._assemble(f"push 0x{0x40+self._udma:02X}", patch_address)
             self._write_bytes(patch_bytes, patch_address)
 
@@ -228,6 +229,7 @@ def main(argc, argv):
     parser.add_argument(
         '-u',
         '--udma',
+        type=int,
         help='specify a UDMA mode (2 through 5)',
         default=2 # UDMA MODE 2 (retail)
     )
