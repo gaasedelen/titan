@@ -98,8 +98,8 @@ class TitanPatcher(object):
         #
 
         if self._udma > 2:
-            print(f"[*] - 0x800553FE: Patching UDMA to version {self._udma}")
             patch_address = 0x800553FE
+            print(f"[*] - 0x{patch_address:X}: Patching UDMA to version {self._udma}")
             patch_bytes = self._assemble(f"push 0x{0x40+self._udma:02X}", patch_address)
             self._write_bytes(patch_bytes, patch_address)
 
