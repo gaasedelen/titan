@@ -253,7 +253,7 @@ class Patch_HddPartitionCreate(XboxPatch):
     ASSEMBLY = \
     """
 
-    ; eax:edx = g_HddSectors
+    ; edx:eax = g_HddSectors
     load_size:
         mov     edx, dword ptr ds:[0x8003C3B8+4]
         mov     eax, dword ptr ds:[0x8003C3B8]
@@ -274,8 +274,8 @@ class Patch_HddPartitionCreate(XboxPatch):
     compute_f_length:
 
         ; RemainingSectors = g_HddSectors - 0xEE8AB0
-        sub     edx, 0xEE8AB0
-        sbb     eax, 0
+        sub     eax, 0xEE8AB0
+        sbb     edx, 0
 
         ; push SectorSize (64bit)
         push    0
