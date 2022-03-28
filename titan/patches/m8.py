@@ -273,15 +273,19 @@ class Patch_HddPartitionCreate(XboxPatch):
 
     compute_f_length:
 
+        ; RemainingSectors = g_HddSectors - 0xEE8AB0
+        sub     edx, 0xEE8AB0
+        sbb     eax, 0
+
         ; push SectorSize (64bit)
         push    0
         push    0x200
 
-        ; push g_HddSectors (64bit)
+        ; push RemainingSectors (64bit)
         push    edx
         push    eax
 
-        ; mul64(g_HddSectors, SectorSize)
+        ; mul64(RemainingSectors, SectorSize)
         call    0x8002E030
     """
 
