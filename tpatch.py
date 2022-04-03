@@ -9,7 +9,7 @@ from titan.keystone import keystone
 from titan.patches.m8 import KERNEL_PATCHES
 from titan.patches.common import PatchType
 
-VERSION = '1.0.1'
+VERSION = '1.1.0'
 AUTHOR  = 'Markus Gaasedelen'
 
 #------------------------------------------------------------------------------

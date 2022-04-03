@@ -253,7 +253,7 @@ class Patch_HddPartitionCreate(XboxPatch):
     ASSEMBLY = \
     """
 
-    ; eax:edx = g_HddSectors
+    ; edx:eax = g_HddSectors
     load_size:
         mov     edx, dword ptr ds:[0x8003C3B8+4]
         mov     eax, dword ptr ds:[0x8003C3B8]
@@ -273,15 +273,19 @@ class Patch_HddPartitionCreate(XboxPatch):
 
     compute_f_length:
 
+        ; RemainingSectors = g_HddSectors - 0xEE8AB0
+        sub     eax, 0xEE8AB0
+        sbb     edx, 0
+
         ; push SectorSize (64bit)
         push    0
         push    0x200
 
-        ; push g_HddSectors (64bit)
+        ; push RemainingSectors (64bit)
         push    edx
         push    eax
 
-        ; mul64(g_HddSectors, SectorSize)
+        ; mul64(RemainingSectors, SectorSize)
         call    0x8002E030
     """
 
@@ -328,27 +332,22 @@ class Patch_HddCreate(XboxPatch):
     mov     dword ptr ds:[0x8003C3B8+4], ecx
     """
 
-class Patch_FatxParseSupeblock(XboxPatch):
+class Patch_FatxProcessBootSector(XboxPatch):
     TYPE = PatchType.JUMP
-    HOOK_ADDRESS = 0x80027143
-    HOOK_RETURN = 0x800271D9
+    HOOK_ADDRESS = 0x80027116
+    HOOK_RETURN = 0x80027149
 
     ASSEMBLY = \
     """
-    ; 128 clusters per sector
-    jz      0x80027149
-
-    ; 256 clusters per sector
-    sub     ecx, 128
-    jz      0x80027149
-
-    ; 512 clusters per sector
-    sub     ecx, 256
-    jz      0x80027149
-
-    ; 1024 clusters per sector
-    sub     ecx, 512
-    jz      0x80027149
+    ; Check if sectors per cluster is 0 and error if so
+    cmp     eax, 0
+    je      0x800271D9
+    ; Check if sectors per cluster is a power of 2, and error if not
+    mov     ecx, eax
+    sub     ecx, 1
+    and     ecx, eax
+    cmp     ecx, 0
+    jne     0x800271D9
     """
 
 class Patch_FatxStartAsyncIo(XboxPatch):
@@ -450,8 +449,8 @@ KERNEL_PATCHES = \
     Patch_HddCreateQuick,
     Patch_HddCreate,
 
-    # allow larger cluster sizes (up to 512kb)
-    Patch_FatxParseSupeblock,
+    # allow larger cluster sizes
+    Patch_FatxProcessBootSector,
 
     # smuggle sector bits for async disk IO
     Patch_FatxStartAsyncIo,
