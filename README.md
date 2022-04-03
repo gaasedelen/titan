@@ -55,8 +55,8 @@ For a full walkthrough of setting up an Xbox with Titan, please refer to the [GU
 Some additional notes about Titan are as follows:
 
  * **Formatting**
-    * The [FATX](https://github.com/mborgerson/fatx) project is currently the only tested/supported method to format a disk for a Titan-based system
-    * XBPartitioner/XBlast/XeniumOS/FATXplorer are all considered unsupported and probably require updates
+    * The [FATX](https://github.com/mborgerson/fatx) project and [FATXplorer](https://fatxplorer.eaton-works.com/) are currently the only tested/supported methods to format a disk for a Titan-based system
+    * XBPartitioner/XBlast/XeniumOS are all considered unsupported and probably require updates
       * I fully expect these tools to get updated releases in the near-future
  * **Partitions**
     * Titan is essentially hardcoded to use a 'F (Partition 6) Takes All'-esque partitioning scheme
@@ -64,7 +64,7 @@ Some additional notes about Titan are as follows:
  * **Clusters**
     * Titan allows increased cluster sizes of 128kb, 256kb, 512kb, 1mb
       * **It is strongly recommended to format large disks (2TB+) with 1024 sectors per cluster (512kb)**
-      * Matt's [FATX](https://github.com/mborgerson/fatx) is the only tool that can currently format disks with larger clusters
+      * Matt's [FATX](https://github.com/mborgerson/fatx) project and [FATXplorer](https://fatxplorer.eaton-works.com/) are currently the only tools that can format disks with larger clusters
     * Due to how the kernel caches file information in-memory, partitions are limited to 2^24 clusters
       * 128kb clusters - up to 2TB partition size
       * 256kb clusters - up to 4TB partition size
